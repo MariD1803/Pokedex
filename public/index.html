@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pokedéx</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" 
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="icon" sizes="16x16 32x32 48x48" type="image/png" href="./favicon.ico" />
+        <link rel="stylesheet" href="../src/assets/css/index.css">
+        <link rel="stylesheet" href="../src/assets/css/animation.css">
+        <link rel="stylesheet" href="../src/assets/css/mediaquerys.css">
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    </head>
+    <body>
+        <div id="app">
+            <div class="spinner" :class="!displaySpinner ? 'hidden' : 'active'">
+                <spinner></spinner>
+            </div>
+
+            <div  v-if="!display" class="section-welcome animation-move-up">
+                <div class="container-pikachu">
+                    <img src="../src/assets/img/pikachu.png"></img> 
+                    <div class="background"></div>
+                    <div class="background-border"></div>
+                </div>
+                
+                <div class="container-column info">
+                    <h3>{{welcome.title}}</h3>
+                    <p>{{welcome.info}}</p>
+                </div>
+
+                <button-custom :action="() => {displaySpinner = !displaySpinner; setDisplay(true);}" :content="'Get started'"></button-custom>                
+
+            </div>
+
+            <div  v-if="display">
+                                
+                <div v-if="modal" class="modal-container" @click="modal = !modal"> 
+                    <card :pokemon="pokemon" class="modal" @update:modal="modal = $event" @click.stop>                        
+                        <i class="fa-solid fa-star" :class="pokemon.favorite === 'true' ? 'active-favorite' : ''" @click="() => {addOrDeleteFavorites(pokemon.idx), pokemon.favorite === 'true' ? pokemon.favorite = 'false' : pokemon.favorite = 'true' }"></i>
+                    </card>
+                </div>
+
+                <div class="section-search-and-favorites" >
+                    <div class="container-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" class="input-search" id="search" @input="search()" v-model="searchInput" placeholder="Search...">
+                    </div>
+                    
+                    <div class="container-column" :class="!results.length || !store.favorites ? 'hidden' : 'item-container'" v-if="displaySearch">
+                        <div v-for="(pokemon,idx) in results" class="item">
+                            <p @click="displayModal(pokemon, idx)">{{pokemon.name}}</p>                            
+                            <div class="container-star" @click="addOrDeleteFavorites(idx)">
+                                <i class="fa-solid fa-star" :class="pokemon.favorite === 'true' ? 'active-favorite' : ''" ></i>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="container-column" :class="!results.length || !store.favorites ? 'hidden' : 'item-container'" v-if="displayFavorites">
+                        <div v-for="(pokemon) in store.favorites" class="item">
+                            <p @click="displayModal(pokemon, idx)">{{pokemon.name}}</p>
+                            <div class="container-star" @click="deleteFavorites(pokemon)"><i class="fa-solid fa-star active-favorite" ></i></div>
+                        </div>
+                        <div v-if="!store.favorites.length">
+                            <notresult :array="havent" :not="true" ></notresult>
+                        </div>
+                    </div>
+
+                    <div v-if="!results.length || !store.favorites ">
+                        <notresult :array="error" @display="displaySpinner = $event" @setdisplay:modal="setDisplay($event)"></notresult>
+                    </div>
+                    
+                    
+                </div>
+                <div class="container-tabs" :class="!results.length || !Array.isArray(store.favorites) ? 'animation-move-down' : 'animation-move-up'">
+                    <button-custom :tab="true" :class="!displaySearch ? 'btn-desactive' : ''" :action="() => {displaySearch = true, displayFavorites = false, clearSearch()}" :content="'All'"><i class="fa-solid fa-list icon"></i></button-custom>
+                    <button-custom :tab="true" :class="!displayFavorites ? 'btn-desactive' : ''" :action="() => {displayFavorites = true, displaySearch = false, clearSearch()}" :content="'Favorites'"><i class="fa-solid fa-star icon"></i></button-custom>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script type="module" src="../src/App.js"></script>
+</html>
