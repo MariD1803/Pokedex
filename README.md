@@ -4,7 +4,23 @@ Una aplicación de búsqueda de pokemones, donde puedes ingresar el nombre del P
 
 ```
 https://pokeapi.co/ solo
+
 ```
+
+## Como hacer funcionar el proyecto: 
+
+1) Descargar el repositorio
+2) Abrir la consola o terminal ubicado en la ruta del repositorio en tu pc
+3) Correr el comando:
+
+```
+npm install
+```
+4) Correr el siguiente comando:
+```
+npm run serve
+```
+5) Hacer click derecho sobre la URL que arroja la consola y listo!
 
 ## Tecnologías Utilizadas
 
@@ -41,3 +57,5 @@ El diseño visual de la aplicación se realizó con CSS, incluyendo:
 ### Autor
 
 Mariangel Diaz 😊
+
+
